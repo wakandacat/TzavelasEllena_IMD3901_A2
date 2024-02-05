@@ -6,67 +6,59 @@
       <!--  note we are using 1.5.0 as most recent -->
       <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
       <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
-      <script src="/selected-colour.js"></script>
+      <script src="js/selected-colour.js"></script>
     </head>
     <body>
       <!--all a-frame stuff needs to be in an a-scene-->
-        <a-scene> 
+        <a-scene onmousemove="getCoords(event)" > 
             <!--camera-->
             <a-entity camera wasd-controls look-controls position="0 1.6 0">
                 <!--interactions-->
                 <!--cursor creates a raycast interaction system where we cast a ray into the scene and check for intersections with the faces of certain objects-->
                 <!--object:.interactive; means only interactive with objects with the CLASSNAME "interactive"-->
-                <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects: .interactive;"></a-entity>
+                <a-entity id="mouse" cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects: .interactive;"></a-entity>
             </a-entity>
             
+            <!--environment-->
             <a-entity environment="preset: forest; fog: 0.75; lighting: point; lightPosition: 0.2; shadow: true; groundTexture: none; groundColor: rgb(255, 255, 255); dressingColor: rgb(172,217,180)"></a-entity>
 
-            <!--interactable snow pile
-            <a-entity id="snowPile" class="interactive" 
-            animation__mouseenter="property:material.color; type:color; to:rgb(235, 247, 245); startEvents:mouseenter; dur:200;"
-            animation__mouseleave="property:material.color; type:color; to:rgb(186, 216, 210); startEvents:mouseleave; dur:200;">
-              <a-entity
-                geometry="primitive:sphere; radius:0.5;"
-                position="0 0 -7.7"
-                material="color: rgb(186, 216, 210);">
-              </a-entity>
-              <a-entity
-                geometry="primitive:sphere; radius:0.3;"
-                position="-0.4 0 -7.5"
-                material="color: rgb(186, 216, 210);">
-              </a-entity>
-              <a-entity
-                geometry="primitive:sphere; radius:0.6;"
-                position="-0.4 0 -7.9"
-                material="color: rgb(186, 216, 210);">
-              </a-entity>
-            </a-entity>
--->
-            <!--interactable snow pile-->
-            <a-entity id="snowPile" class="interactive" 
-            geometry="primitive:sphere; radius:1;"
-            selected-colour
-            material="opacity: 0;"
-            position="0 0 -6.5"
-            animation__mouseenter="property:material.color; type:color; to:rgb(235, 247, 245); startEvents:mouseenter; dur:200;"
-            animation__mouseleave="property:material.color; type:color; to:rgb(186, 216, 210); startEvents:mouseleave; dur:200;">
-              <a-entity class="snow"
-                geometry="primitive:sphere; radius:0.5;"
-                position="0 0 -0.7"
-                material="color: rgb(186, 216, 210);">
-              </a-entity>
-              <a-entity class="snow"
-                geometry="primitive:sphere; radius:0.3;"
-                position="-0.4 0 -0.5"
-                material="color: rgb(186, 216, 210);">
-              </a-entity>
-              <a-entity class="snow"
-                geometry="primitive:sphere; radius:0.6;"
-                position="-0.4 0 -0.9"
-                material="color: rgb(186, 216, 210);">
-              </a-entity>
+            <!--text-->
+            <a-entity id="text" position="0 1 -7.5" visible="false" text="value:Pick up snowball!; color:#3dad97; font:roboto; width:1.5; anchor:left; baseline:top; wrapCount:12;">
             </a-entity>
 
+            <!--interactable snow pile-->
+            <a-entity id="snowPile" class="interactive" 
+            geometry="primitive:sphere; radius:0.9;"
+            material="opacity: 0;"
+            position="0 0 -7.5"
+            selected-colour="color: rgb(235, 247, 245)">
+                <a-entity class="snow"
+                  geometry="primitive:sphere; radius:0.5;"
+                  position="0.3 0 0.2"
+                  material="color: rgb(186, 216, 210);">
+                </a-entity>
+                <a-entity class="snow"
+                  geometry="primitive:sphere; radius:0.3;"
+                  position="-0.1 0 0.4"
+                  material="color: rgb(186, 216, 210);">
+                </a-entity>
+                <a-entity class="snow"
+                  geometry="primitive:sphere; radius:0.6;"
+                  position="-0.1 0 0"
+                  material="color: rgb(186, 216, 210);">
+                </a-entity>
+            </a-entity>
         </a-scene>
     </body>
+    <script>     
+
+      function getCoords(event){
+        let x = event.clientX;
+        let y = event.clientY;
+
+       // var snowBall = document.querySelector('#ball');
+        //snowBall.setAttribute(position: );
+      }
+
+    </script>
 </html>
