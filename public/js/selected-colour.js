@@ -12,9 +12,9 @@ AFRAME.registerComponent('selected-colour', {
         var snow = document.querySelectorAll('.snow');
         var text = document.querySelector('#text');
         var scene = document.querySelector('a-scene');
+        var cursor = document.querySelector('#mouse');
         var isHolding = false;
 
-        console.log(isHolding);
         //.el refers to the element that this current component/attribute is attached to
         el.addEventListener('mouseenter', function () {
             if(isHolding == false){
@@ -26,7 +26,9 @@ AFRAME.registerComponent('selected-colour', {
             }
         });
     
-        el.addEventListener('mouseleave', function () {
+        el.addEventListener('mouseleave', leftArea);
+
+        function leftArea(){
             if(isHolding == false){
                 for (let i = 0; i < snow.length; i++) {
                     snow[i].removeAttribute('material', 'color');
@@ -34,16 +36,18 @@ AFRAME.registerComponent('selected-colour', {
                 }
                 text.setAttribute('visible', false);
             }
-        });
+        }
 
         el.addEventListener('click', function () {
             if(isHolding == false){
                 var snowBall = document.createElement('a-entity');
                 snowBall.setAttribute('id', 'ball');
+                snowBall.setAttribute('class', 'interactive');
                 snowBall.setAttribute('geometry', {primitive: 'sphere'},{radius: '0.5'});
                 snowBall.setAttribute('material', {color: 'rgb(186, 216, 210)'});
-                snowBall.setAttribute('position', '0 1 -7.5');
-                scene.appendChild(snowBall);
+                snowBall.setAttribute('position', '0 1 -7.5');          
+                cursor.appendChild(snowBall);
+                leftArea();
                 isHolding = true;
             }
         });
