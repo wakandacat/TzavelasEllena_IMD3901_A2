@@ -6,6 +6,7 @@
       <!--  note we are using 1.5.0 as most recent -->
       <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
       <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v1.0.4/dist/aframe-physics-system.min.js"></script>
       <script src="js/selected-colour.js"></script>
       <script src="js/ball-manipulation.js"></script>
     
@@ -14,8 +15,7 @@
           position: absolute;
           z-index: 9999;
           display: none;
-          top: -300px;
-          left: -300px;
+
           font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
           color:aqua;
         }
@@ -62,10 +62,55 @@
       </style>
 
     </head>
+
+    <script>
+//attached to the scene
+AFRAME.registerComponent('hold-state', {
+    schema: {
+      isHolding: {type: 'boolean', default: false},
+    },
+    multiple:false,
+    init: function() { //setup/constructor
+
+        // const data = this.data;
+        // var el = this.el;
+        // var snow = document.querySelectorAll('.snow');
+        // var text = document.querySelector('#text');
+        // var camera = document.querySelector('#cam');
+        // var snowBall = document.querySelector('#ball');
+
+
+    },
+    tick: function(){
+        const data = this.data;
+        var el = this.el;
+        var UI = document.querySelector('#UI');
+
+        if (document.querySelector('#ball')){
+          if(document.querySelector('#ball').getAttribute('ball-manipulation').isManipulating == true){
+            this.data.isHolding = true;
+            UI.style.display = 'block';
+          } else {
+            this.data.isHolding = false;
+          //  text.setAttribute('visible', true);
+            UI.style.display = 'none';
+          }
+
+        }
+    },
+});
+
+    </script>
+
     <body>
 
       <!--UI-->
       <div id="UI">
+        <!--
+
+          top: -300px;
+          left: -300px;
+
         <section>
           <div id="specialBack">
           </div>
@@ -84,12 +129,17 @@
           <h3 id="size"></h3>
           <h3 id="colour"></h3>
         </section>
+        -->
+        holding snowball
+        <div class="slidecontainer">
+          <input type="range" min="1" max="10" value="5" class="slider" id="ballScale">
+          <input type="color" id="ballColor" name="ballColor" value="#bad8d2"><br><br>
+        </div>
       </div>
 
 
-
       <!--all a-frame stuff needs to be in an a-scene-->
-        <a-scene obb-collider="showColliders: true"> 
+        <a-scene physics="debug:true" hold-state="isHolding: false"> 
             <!--camera-->
             <a-entity id="cam" camera wasd-controls look-controls position="0 1.6 0">
                 <!--interactions-->
@@ -102,11 +152,17 @@
             <a-entity environment="preset: forest; fog: 0.75; shadow: true; groundTexture: none; groundColor: rgb(255, 255, 255); dressingColor: rgb(172,217,180)"></a-entity>
 
             <!--ground-->
-            <a-entity obb-collider class="ground" 
+            <a-entity static-body class="ground" 
                         geometry="primitive:plane; width:30; height:30;"
                         material="color: white;"
                         position="0 0.01 0"
                         rotation="-90 0 0">
+            </a-entity>
+
+            <a-entity dynamic-body
+                        geometry="primitive:sphere; radius: 1;"
+                        material="color: red;"
+                        position="0 10 0">
             </a-entity>
 
             <!--text-->
@@ -137,31 +193,5 @@
             </a-entity>
         </a-scene>
     </body>
-    <script>     
 
-      window.setInterval(attachAttr, 500);
-
-      //onmousemove="getCoords(event)"
-      // function getCoords(event){
-      //   let x = event.clientX;
-      //   let y = event.clientY;
-
-      //   x = x/screen.width;
-      //   y = y/screen.height;
-
-      //   if (document.querySelector('#ball')){
-      //     console.log(x + " " + y);
-      //     var snowBall = document.querySelector('#ball');
-      //     snowBall.setAttribute('position', {x: x, y: y, z: 0});
-      //   }
-      // }
-
-      function attachAttr(){
-        if (document.querySelector('#ball')){
-          document.querySelector('#UI').style.display = "block";
-          document.querySelector('#ball').setAttribute('ball-manipulation', '');
-        }
-      }
-
-    </script>
 </html>
