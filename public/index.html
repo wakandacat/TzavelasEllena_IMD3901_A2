@@ -13,6 +13,7 @@
         #UI {
           position: absolute;
           z-index: 9999;
+          display: none;
           top: -300px;
           left: -300px;
           font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -20,25 +21,43 @@
         }
         #specialBack{
           background-color: blue;
-          width: 600px;
-          height: 600px;
+          width: 500px;
+          height: 500px;
           transform: rotate(-30deg);
         }
-        #specialBig{
+        #qualities{
+          background-color: blue;
+          width: 700px;
+          height: 700px;
+          transform: rotate(-55deg);
+        }
+        .specialBig{
           position: relative;
-          top: -350px;
-          left: 310px;
           padding: 50px;
           padding-bottom: 10px;
           margin-bottom: 0px;
-          font-size: 4em;
+          font-size: 3em;
         }
-        #specialSmall{
+        #holding{
+          top: -280px;
+          left: 280px;
+        }
+        #about{
+          top: -750px;
+          left: 280px;
+        }
+        .specialSmall{
           position: relative;
-          top: -350px;
-          left: 310px;
           padding-left: 50px;
           margin: 0px;
+        }
+        #snowball1{
+          top: -300px;
+          left: 280px;
+        }
+        #snowball2{
+          top: -770px;
+          left: 280px;
         }
       </style>
 
@@ -50,33 +69,45 @@
         <section>
           <div id="specialBack">
           </div>
-          <h1 id="specialBig">HOLDING</h1>
-          <h3 id="specialSmall">SNOWBALL</h3>
+          <h1 class="specialBig" id="holding">HOLDING</h1>
+          <h3 class="specialSmall" id="snowball1">SNOWBALL</h3>
         </section>
         <section>
           <div id="qualities">
-            <h1 id="specialBig">ABOUT</h1>
-            <h3 id="specialSmall">SNOWBALL</h3>
-            <h3 id="size"></h3>
-            <h3 id="colour"></h3>
           </div>
+          <h1 class="specialBig" id="about">ABOUT</h1>
+          <div class="specialSmall" id="snowball2">
+            <h3>SNOWBALL</h3>
+            <div class="slidecontainer">
+              <input type="range" min="1" max="100" value="50" class="slider" id="ballScale">
+            </div></div>
+          <h3 id="size"></h3>
+          <h3 id="colour"></h3>
         </section>
       </div>
 
 
 
       <!--all a-frame stuff needs to be in an a-scene-->
-        <a-scene> 
+        <a-scene obb-collider="showColliders: true"> 
             <!--camera-->
-            <a-entity camera wasd-controls look-controls position="0 1.6 0">
+            <a-entity id="cam" camera wasd-controls look-controls position="0 1.6 0">
                 <!--interactions-->
                 <!--cursor creates a raycast interaction system where we cast a ray into the scene and check for intersections with the faces of certain objects-->
                 <!--object:.interactive; means only interactive with objects with the CLASSNAME "interactive"-->
-                <a-entity id="mouse" cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects: .interactive;"></a-entity>
+                <a-entity id="mouse" cursor="rayOrigin:mouse;" raycaster="far:5; interval:200; objects: .interactive;"></a-entity>
             </a-entity>
             
             <!--environment-->
-            <a-entity environment="preset: forest; fog: 0.75; lighting: point; lightPosition: 0.2; shadow: true; groundTexture: none; groundColor: rgb(255, 255, 255); dressingColor: rgb(172,217,180)"></a-entity>
+            <a-entity environment="preset: forest; fog: 0.75; shadow: true; groundTexture: none; groundColor: rgb(255, 255, 255); dressingColor: rgb(172,217,180)"></a-entity>
+
+            <!--ground-->
+            <a-entity obb-collider class="ground" 
+                        geometry="primitive:plane; width:30; height:30;"
+                        material="color: white;"
+                        position="0 0.01 0"
+                        rotation="-90 0 0">
+            </a-entity>
 
             <!--text-->
             <a-entity id="text" position="0 1 -7.5" visible="false" text="value:PICK UP; color:aqua; font:roboto; width:1.5; anchor:left; baseline:top; wrapCount:12;">
@@ -127,6 +158,7 @@
 
       function attachAttr(){
         if (document.querySelector('#ball')){
+          document.querySelector('#UI').style.display = "block";
           document.querySelector('#ball').setAttribute('ball-manipulation', '');
         }
       }

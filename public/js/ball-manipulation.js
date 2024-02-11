@@ -12,8 +12,13 @@ AFRAME.registerComponent('ball-manipulation', {
         var snow = document.querySelectorAll('.snow');
         var text = document.querySelector('#text');
         var scene = document.querySelector('a-scene');
+        var camera = document.querySelector('#cam');
+
+        //physics stuff
+        var velocity = 5;
+        var gravity = -9.8;
     
-        console.log(el);
+        console.log(camera.getAttribute('rotation')); 
 
         el.addEventListener('click', function () {
             console.log("throw");
