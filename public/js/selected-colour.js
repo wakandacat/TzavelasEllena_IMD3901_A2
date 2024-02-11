@@ -42,8 +42,7 @@ AFRAME.registerComponent('selected-colour', {
             if(scene.getAttribute('hold-state').isHolding == false){
                 //create the snowball and hold it
                 var snowBall = document.createElement('a-entity');
-                snowBall.setAttribute('id', 'ball');
-                snowBall.setAttribute('class', 'interactive');
+                snowBall.setAttribute('class', 'ball interactive');
                 snowBall.setAttribute('geometry', {primitive: 'sphere'},{radius: '0.1'});
                 snowBall.setAttribute('material', {color: 'rgb(186, 216, 210)'});
                 snowBall.setAttribute('position', '0 0 -2');
@@ -54,9 +53,5 @@ AFRAME.registerComponent('selected-colour', {
             }
         });
     },
-    tick: function(){
-    //var scene = document.querySelector('a-scene');
-    //var held = scene.getAttribute('hold-state').isHolding;
-   // console.log(held);
-    },
+
 });
