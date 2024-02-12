@@ -1,0 +1,69 @@
+#UI {
+    position: absolute;
+    z-index: 9999;
+    display: none;
+    background-color: #238773;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color:#56e3c7;
+    padding: 2%;
+    border: 5px solid #ffffff;
+    border-radius: 0px 0px 100px 0px;
+    top: -5px;
+    left: -5px;
+  }
+
+  #extraText {
+    margin-bottom: 0;
+  }
+  #snowballText {
+    margin-top: 0;
+  }
+  input {
+    width: 85%;
+  }
+  
+  #user-gesture-overlay {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #bad8d2;
+    z-index: 999999;
+    cursor: pointer;
+  }
+  
+  .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  
+  #user-gesture-button {
+    display: none;
+    width: 100%;
+    background-color: #56e3c7;
+    color: #238773;
+    padding: 30px 20px;
+    margin: 8px 10px 8px 10px;
+    border: 5px solid #ffffff;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  #user-gesture-button:hover {
+    background-color: #238773;
+    color: white;
+  }
+
+  #loading-animation {
+    display: block;
+    width: 80%;
+    height: 80%;
+  }

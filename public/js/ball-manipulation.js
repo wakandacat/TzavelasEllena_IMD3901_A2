@@ -9,6 +9,7 @@ AFRAME.registerComponent('ball-manipulation', {
 
         var el = this.el;
         var scene = document.querySelector('a-scene');
+        var sound = document.querySelector('#crunch');
 
         //snowball collide with floor
         el.addEventListener('collide', function (e) {
@@ -27,7 +28,9 @@ AFRAME.registerComponent('ball-manipulation', {
 
             //delete the snowball once it hits the ground
             setTimeout(function() { //delete between frames?
+                e.detail.body.el.parentNode.removeChild(document.querySelector('#text2'));
                 e.detail.body.el.parentNode.removeChild(e.detail.body.el);
+                sound.components.sound.playSound();
             }, 0);    
             
           });
@@ -40,9 +43,12 @@ AFRAME.registerComponent('ball-manipulation', {
         var el = this.el;
         const data = this.data;
         var camera = document.querySelector('#cam');
+        //var text = document.querySelector('#text2');
+        var cursor = document.querySelector('#mouse');
 
         //if there is a snowball being held currently
         if(data.isManipulating == true){
+
             //get the scale from the slider
             var myScale = document.getElementById("ballScale").value / 10;
             el.setAttribute('scale', {x: myScale, y: myScale, z: myScale});

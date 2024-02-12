@@ -52,6 +52,14 @@ AFRAME.registerComponent('selected-colour', {
                 snowBall.setAttribute('scale', '0.5 0.5 0.5'); 
                 snowBall.setAttribute('ball-manipulation', {isManipulating: true});  
                 cursor.appendChild(snowBall);
+
+                var text = document.createElement('a-entity');
+                text.setAttribute('id', 'text2');
+                text.setAttribute('visible', true);
+                text.setAttribute('text', {value: 'CLICK TO THROW', color: 'rgb(86, 227, 199)', font: 'exo2bold', width: '1.5', anchor: 'left', baseline: 'top', wrapCount: '12'});   
+                text.setAttribute('position', '2 1 -3')
+                cursor.appendChild(text);
+
                 //make sure the snow pile is not interactable while snowball is held
                 leftArea();
             }

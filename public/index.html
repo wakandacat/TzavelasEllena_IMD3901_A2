@@ -11,98 +11,8 @@
      
       <script src="js/selected-colour.js"></script>
       <script src="js/ball-manipulation.js"></script>
-    
-      <style>
-        #UI {
-          position: absolute;
-          z-index: 9999;
-          display: none;
 
-          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-          color:#56e3c7;
-        }
-        #specialBack{
-          background-color: blue;
-          width: 500px;
-          height: 500px;
-          transform: rotate(-30deg);
-        }
-        #qualities{
-          background-color: blue;
-          width: 700px;
-          height: 700px;
-          transform: rotate(-55deg);
-        }
-        .specialBig{
-          position: relative;
-          padding: 50px;
-          padding-bottom: 10px;
-          margin-bottom: 0px;
-          font-size: 3em;
-        }
-        #holding{
-          top: -280px;
-          left: 280px;
-        }
-        #about{
-          top: -750px;
-          left: 280px;
-        }
-        .specialSmall{
-          position: relative;
-          padding-left: 50px;
-          margin: 0px;
-        }
-        #snowball1{
-          top: -300px;
-          left: 280px;
-        }
-        #snowball2{
-          top: -770px;
-          left: 280px;
-        }
-
-        #user-gesture-overlay {
-          position: fixed;
-          display: block;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #bad8d2;
-          z-index: 999999;
-          cursor: pointer;
-        }
-        
-        .center {
-          margin: 0;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-        }
-        
-        #user-gesture-button {
-          display: none;
-          width: 80%;
-          height: 80%;
-          background-color: #56e3c7;
-          color: white;
-          padding: 14px 20px;
-          margin: 0px 10px 8px 10px;
-          border: 5px solid #ffffff;
-          border-radius: 20px;
-          cursor: pointer;
-        }
-        
-        #user-gesture-button:hover {
-          background-color: #238773;
-        }
-
-      </style>
+      <link rel="stylesheet" href="css/styles.css">
 
     </head>
 
@@ -113,7 +23,7 @@
         init: function () {
           //we can't play sound on some browsers until we have some user interaction
           //this means we should only start playing ambient music after this button is clicked
-          console.log('scene loaded');
+          document.querySelector('#loading-animation').style.display='none';
           document.querySelector('#user-gesture-button').style.display='block';
         }
       });
@@ -167,39 +77,22 @@
 
       <div id="user-gesture-overlay">
         <div class="center">
-          <button id="user-gesture-button" onclick="startExperience();">SNOWBALL</button>
+          <button id="user-gesture-button" onclick="startExperience();">
+            <h3>SNOWBALL</h3>
+          </button>
+          <img id="loading-animation" src="https://cdn.glitch.com/4d85200f-900f-4f4a-b950-82c4af80c1fb%2Floader.gif?v=1611262527887">
         </div>
       </div>
 
       <!--UI-->
       <div id="UI">
-        <!--
-
-          top: -300px;
-          left: -300px;
-
-        <section>
-          <div id="specialBack">
-          </div>
-          <h1 class="specialBig" id="holding">HOLDING</h1>
-          <h3 class="specialSmall" id="snowball1">SNOWBALL</h3>
-        </section>
-        <section>
-          <div id="qualities">
-          </div>
-          <h1 class="specialBig" id="about">ABOUT</h1>
-          <div class="specialSmall" id="snowball2">
-            <h3>SNOWBALL</h3>
-            <div class="slidecontainer">
-              <input type="range" min="1" max="100" value="50" class="slider" id="ballScale">
-            </div></div>
-          <h3 id="size"></h3>
-          <h3 id="colour"></h3>
-        </section>
-        -->
-        holding snowball
+        <h5 id="extraText">HOLDING</h5>
+        <h1 id="snowballText">SNOWBALL</h1>
         <div class="slidecontainer">
+          <h3 id="extraText">RADIUS</h3>
           <input type="range" min="1" max="10" value="5" class="slider" id="ballScale">
+          <br/>
+          <h3 id="extraText">COLOUR</h3>
           <input type="color" id="ballColor" name="ballColor" value="#bad8d2"><br><br>
         </div>
       </div>
@@ -217,55 +110,60 @@
             <audio id="collision" src="assets/snowballsound.mp3" preload="auto" crossorigin="anonymous"></audio>
           </a-assets>
 
-           <!--play the background music-->
-           <a-entity id="backMusic" sound="src:#back_music; loop:true; volume:0.5;"></a-entity>
+          <!--play the background music-->
+          <a-entity id="backMusic" sound="src:#back_music; loop:true; volume:0.5;"></a-entity>
 
-            <!--camera-->
-            <a-entity id="cam" camera wasd-controls look-controls position="0 1.6 0">
-                <!--interactions-->
-                <!--cursor creates a raycast interaction system where we cast a ray into the scene and check for intersections with the faces of certain objects-->
-                <!--object:.interactive; means only interactive with objects with the CLASSNAME "interactive"-->
-                <a-entity id="mouse" cursor="rayOrigin:mouse;" raycaster="far:5; interval:200; objects: .interactive;"></a-entity>
-                <a-entity id="step" sound="src: #footstep; loop:true; volume:0.3;"></a-entity>
+          <!--other sounds-->
+          <a-entity id="step" sound="src: #footstep; loop:true; volume:0.3;"></a-entity>
+          <a-entity id="crunch" sound="src: #collision;"></a-entity>
+
+          <!--camera-->
+          <a-entity id="cam" camera wasd-controls look-controls position="0 1.6 0">
+              <!--interactions-->
+              <!--cursor creates a raycast interaction system where we cast a ray into the scene and check for intersections with the faces of certain objects-->
+              <!--object:.interactive; means only interactive with objects with the CLASSNAME "interactive"-->
+              <a-entity id="mouse" cursor="rayOrigin:mouse;" raycaster="far:5; interval:200; objects: .interactive;"></a-entity>
+        
+          </a-entity>
+          
+          <!--environment-->
+          <a-entity environment="preset: forest; fog: 0.75; shadow: true; groundTexture: none; groundColor: rgb(255, 255, 255); dressingColor: rgb(172,217,180)"></a-entity>
+
+          <!--ground-->
+          <a-entity static-body class="ground" 
+                      geometry="primitive:plane; width:100; height:100;"
+                      material="color: white;"
+                      position="0 0.01 0"
+                      rotation="-90 0 0">
+          </a-entity>
+
+          <!--text-->
+          <a-entity id="text" position="0 1 -7.5" visible="false" text="value:CLICK TO PICK UP; color:#56e3c7; font:exo2bold; width:1.5; anchor:left; baseline:top; wrapCount:12;"></a-entity>
+<!--
+          <a-entity id="text2" position="0 0 0" visible="false" text="value:CLICK TO THROW; color:#56e3c7; font:exo2bold; width:1.5; anchor:left; baseline:top; wrapCount:12;"></a-entity>
+-->
+          <!--interactable snow pile-->
+          <a-entity id="snowPile" class="interactive" 
+          geometry="primitive:sphere; radius:0.9;"
+          material="opacity: 0;"
+          position="0 0 -7.5"
+          selected-colour="color: rgb(235, 247, 245)">
+              <a-entity class="snow"
+                geometry="primitive:sphere; radius:0.5;"
+                position="0.3 0 0.2"
+                material="color: rgb(186, 216, 210);">
               </a-entity>
-            
-            <!--environment-->
-            <a-entity environment="preset: forest; fog: 0.75; shadow: true; groundTexture: none; groundColor: rgb(255, 255, 255); dressingColor: rgb(172,217,180)"></a-entity>
-
-            <!--ground-->
-            <a-entity static-body class="ground" 
-                        geometry="primitive:plane; width:100; height:100;"
-                        material="color: white;"
-                        position="0 0.01 0"
-                        rotation="-90 0 0">
-            </a-entity>
-
-            <!--text-->
-            <a-entity id="text" position="0 1 -7.5" visible="false" text="value:PICK UP; color:#56e3c7; font:roboto; width:1.5; anchor:left; baseline:top; wrapCount:12;">
-            </a-entity>
-
-            <!--interactable snow pile-->
-            <a-entity id="snowPile" class="interactive" 
-            geometry="primitive:sphere; radius:0.9;"
-            material="opacity: 0;"
-            position="0 0 -7.5"
-            selected-colour="color: rgb(235, 247, 245)">
-                <a-entity class="snow"
-                  geometry="primitive:sphere; radius:0.5;"
-                  position="0.3 0 0.2"
-                  material="color: rgb(186, 216, 210);">
-                </a-entity>
-                <a-entity class="snow"
-                  geometry="primitive:sphere; radius:0.3;"
-                  position="-0.1 0 0.4"
-                  material="color: rgb(186, 216, 210);">
-                </a-entity>
-                <a-entity class="snow"
-                  geometry="primitive:sphere; radius:0.6;"
-                  position="-0.1 0 0"
-                  material="color: rgb(186, 216, 210);">
-                </a-entity>
-            </a-entity>
+              <a-entity class="snow"
+                geometry="primitive:sphere; radius:0.3;"
+                position="-0.1 0 0.4"
+                material="color: rgb(186, 216, 210);">
+              </a-entity>
+              <a-entity class="snow"
+                geometry="primitive:sphere; radius:0.6;"
+                position="-0.1 0 0"
+                material="color: rgb(186, 216, 210);">
+              </a-entity>
+          </a-entity>
         </a-scene>
     </body>
     <script>
