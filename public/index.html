@@ -19,7 +19,7 @@
           display: none;
 
           font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-          color:aqua;
+          color:#56e3c7;
         }
         #specialBack{
           background-color: blue;
@@ -61,11 +61,73 @@
           top: -770px;
           left: 280px;
         }
+
+        #user-gesture-overlay {
+          position: fixed;
+          display: block;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #bad8d2;
+          z-index: 999999;
+          cursor: pointer;
+        }
+        
+        .center {
+          margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+        }
+        
+        #user-gesture-button {
+          display: none;
+          width: 80%;
+          height: 80%;
+          background-color: #56e3c7;
+          color: white;
+          padding: 14px 20px;
+          margin: 0px 10px 8px 10px;
+          border: 5px solid #ffffff;
+          border-radius: 20px;
+          cursor: pointer;
+        }
+        
+        #user-gesture-button:hover {
+          background-color: #238773;
+        }
+
       </style>
 
     </head>
 
     <script>
+      
+      //user gesture to start music
+      AFRAME.registerComponent('start-experience', {
+        init: function () {
+          //we can't play sound on some browsers until we have some user interaction
+          //this means we should only start playing ambient music after this button is clicked
+          console.log('scene loaded');
+          document.querySelector('#user-gesture-button').style.display='block';
+        }
+      });
+      
+      //function called from user-gesture click
+      const startExperience = function() {
+        //hide user-gesture overlay
+        document.querySelector('#user-gesture-overlay').style.display='none';
+        
+        //start all ambient music
+        let music = document.querySelector('#backMusic');
+        music.components.sound.playSound();
+      }
+
       //attached to the scene
       AFRAME.registerComponent('hold-state', {
           schema: {
@@ -73,14 +135,6 @@
           },
           multiple:false,
           init: function() { //setup/constructor
-
-              // const data = this.data;
-              // var el = this.el;
-              // var snow = document.querySelectorAll('.snow');
-              // var text = document.querySelector('#text');
-              // var camera = document.querySelector('#cam');
-              // var snowBall = document.querySelector('#ball');
-
 
           },
           tick: function(){
@@ -103,17 +157,6 @@
                     UI.style.display = 'none';
                   }
                 }
-
-                // console.log(document.querySelector('.ball').getAttribute('ball-manipulation').isManipulating);
-                // if(document.querySelector('.ball').getAttribute('ball-manipulation').isManipulating == true){
-                //   this.data.isHolding = true;
-                //   UI.style.display = 'block';
-                // } else {
-                //   this.data.isHolding = false;
-                // //  text.setAttribute('visible', true);
-                //   UI.style.display = 'none';
-                // }
-
               }
           },
       });
@@ -121,6 +164,12 @@
     </script>
 
     <body>
+
+      <div id="user-gesture-overlay">
+        <div class="center">
+          <button id="user-gesture-button" onclick="startExperience();">SNOWBALL</button>
+        </div>
+      </div>
 
       <!--UI-->
       <div id="UI">
@@ -157,14 +206,28 @@
 
 
       <!--all a-frame stuff needs to be in an a-scene-->
-        <a-scene physics="debug:true" hold-state="isHolding: false"> 
+        <a-scene start-experience physics hold-state="isHolding: false"> 
+
+          <!--aframe uses an asset system to cache assets-->
+          <a-assets timeout="10000">
+        
+            <!--music/sounds-->
+            <audio id="back_music" src="assets/wintermusic.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <audio id="footstep" src="assets/footsteps.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <audio id="collision" src="assets/snowballsound.mp3" preload="auto" crossorigin="anonymous"></audio>
+          </a-assets>
+
+           <!--play the background music-->
+           <a-entity id="backMusic" sound="src:#back_music; loop:true; volume:0.5;"></a-entity>
+
             <!--camera-->
             <a-entity id="cam" camera wasd-controls look-controls position="0 1.6 0">
                 <!--interactions-->
                 <!--cursor creates a raycast interaction system where we cast a ray into the scene and check for intersections with the faces of certain objects-->
                 <!--object:.interactive; means only interactive with objects with the CLASSNAME "interactive"-->
                 <a-entity id="mouse" cursor="rayOrigin:mouse;" raycaster="far:5; interval:200; objects: .interactive;"></a-entity>
-            </a-entity>
+                <a-entity id="step" sound="src: #footstep; loop:true; volume:0.3;"></a-entity>
+              </a-entity>
             
             <!--environment-->
             <a-entity environment="preset: forest; fog: 0.75; shadow: true; groundTexture: none; groundColor: rgb(255, 255, 255); dressingColor: rgb(172,217,180)"></a-entity>
@@ -178,7 +241,7 @@
             </a-entity>
 
             <!--text-->
-            <a-entity id="text" position="0 1 -7.5" visible="false" text="value:PICK UP; color:aqua; font:roboto; width:1.5; anchor:left; baseline:top; wrapCount:12;">
+            <a-entity id="text" position="0 1 -7.5" visible="false" text="value:PICK UP; color:#56e3c7; font:roboto; width:1.5; anchor:left; baseline:top; wrapCount:12;">
             </a-entity>
 
             <!--interactable snow pile-->
@@ -205,5 +268,25 @@
             </a-entity>
         </a-scene>
     </body>
+    <script>
+
+      //get player movement for footsteps
+      let camera = document.querySelector('#cam');
+      let initialPos = {x: 0, y: 0, z: 0};
+      var footsteps = document.querySelector('#step');
+
+      setInterval(() => {
+        let currentPos = camera.getAttribute('position');
+       // console.log("init" + initialPos.z + " curr " + currentPos.z);
+        if (parseFloat(currentPos.x) !== parseFloat(initialPos.x) || parseFloat(currentPos.z) !== parseFloat(initialPos.z)) {
+          
+          footsteps.components.sound.playSound();          
+        } else {
+          footsteps.components.sound.stopSound();
+        }
+        initialPos = { x: currentPos.x, y: currentPos.y, z: currentPos.z }; // Create a new object for initialPos
+      }, 200); // Check every 100 milliseconds
+
+    </script>
 
 </html>

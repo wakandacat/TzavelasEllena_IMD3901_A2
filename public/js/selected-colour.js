@@ -14,7 +14,7 @@ AFRAME.registerComponent('selected-colour', {
         var cursor = document.querySelector('#mouse');
         var text = document.querySelector('#text');
 
-        //.el refers to the element that this current component/attribute is attached to
+        //the mouseover changes the colour of the snow pile
         el.addEventListener('mouseenter', function () {
             
             if(scene.getAttribute('hold-state').isHolding == false){
@@ -25,7 +25,9 @@ AFRAME.registerComponent('selected-colour', {
                 text.setAttribute('visible', true);
             }
         });
-    
+        
+        //when mouse leaves change the colour back
+        //make the function seperate so that we can use it again when a ball is currently being held
         el.addEventListener('mouseleave', leftArea);
 
         function leftArea(){
@@ -38,9 +40,10 @@ AFRAME.registerComponent('selected-colour', {
             }
         }
 
+        //when the snow pile is clicked, create a snowball and hold it
         el.addEventListener('click', function () {
             if(scene.getAttribute('hold-state').isHolding == false){
-                //create the snowball and hold it
+
                 var snowBall = document.createElement('a-entity');
                 snowBall.setAttribute('class', 'ball interactive');
                 snowBall.setAttribute('geometry', {primitive: 'sphere'},{radius: '0.1'});
@@ -49,9 +52,9 @@ AFRAME.registerComponent('selected-colour', {
                 snowBall.setAttribute('scale', '0.5 0.5 0.5'); 
                 snowBall.setAttribute('ball-manipulation', {isManipulating: true});  
                 cursor.appendChild(snowBall);
+                //make sure the snow pile is not interactable while snowball is held
                 leftArea();
             }
         });
     },
-
 });

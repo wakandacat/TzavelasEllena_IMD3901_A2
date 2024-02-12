@@ -7,11 +7,8 @@ AFRAME.registerComponent('ball-manipulation', {
     multiple:false,
     init: function() { //setup/constructor
 
-        const data = this.data;
         var el = this.el;
-        var snow = document.querySelectorAll('.snow');
         var scene = document.querySelector('a-scene');
-        var camera = document.querySelector('#cam');
 
         //snowball collide with floor
         el.addEventListener('collide', function (e) {
@@ -19,22 +16,19 @@ AFRAME.registerComponent('ball-manipulation', {
             var myColor = document.getElementById("ballColor").value
             var myScale = document.getElementById("ballScale").value / 10;
 
+            //create a splatter where the snowball hit the ground
             var splat = document.createElement('a-entity');
             splat.setAttribute('geometry', {primitive: 'circle'},{radius: '1'});
             splat.setAttribute('material', {color: myColor});
-            splat.setAttribute('position', {x:e.detail.contact.ni.x, y:0.015, z:e.detail.contact.ni.z});
+            splat.setAttribute('position', {x:e.detail.contact.rj.x, y:0.015, z:e.detail.contact.rj.z});
             splat.setAttribute('rotation', '-90 0 0'); 
             splat.setAttribute('scale', {x:myScale, y:myScale, z:myScale});
             scene.appendChild(splat); 
 
+            //delete the snowball once it hits the ground
             setTimeout(function() { //delete between frames?
-               // console.log('collision with enemy', e.detail.body.el);
                 e.detail.body.el.parentNode.removeChild(e.detail.body.el);
-              }, 0);
-
-               // e.detail.body.el;    // Other entity, which playerEl touched.
-              //  e.detail.contact;    // Stats about the collision (CANNON.ContactEquation).
-               // e.detail.contact.ni; // Normal (direction) of the collision (CANNON.Vec3).     
+            }, 0);    
             
           });
 
@@ -45,34 +39,35 @@ AFRAME.registerComponent('ball-manipulation', {
 
         var el = this.el;
         const data = this.data;
-        var cursor = document.querySelector('#mouse');
-        var scene = document.querySelector('a-scene');
         var camera = document.querySelector('#cam');
 
+        //if there is a snowball being held currently
         if(data.isManipulating == true){
+            //get the scale from the slider
             var myScale = document.getElementById("ballScale").value / 10;
             el.setAttribute('scale', {x: myScale, y: myScale, z: myScale});
-    
+            
+            //get the color from the slider
             var myColor = document.getElementById("ballColor").value;
             el.setAttribute('material', {color: myColor});
-    
+            
+            //once the ball is clicked "thrown"
             el.addEventListener('click', function () {
                
                 data.isManipulating = false;
 
+                //add the physics body to it so it'll apply gravity
                 el.setAttribute('dynamic-body', {shape: 'sphere', radius: myScale});
                 
-               // let camRot = camera.getAttribute('rotation');
-                //console.log(camRot);
+                //get the current camera direction
+                var direction = new THREE.Vector3();
+                direction = camera.object3D.getWorldDirection(direction);
 
-                el.body.velocity.set(3, 3, 0);
-              // el.body.applyImpulse(new CANNON.Vec3(3, 3, 0), new CANNON.Vec3().copy(position));
-   
-             });
+                //add a force
+                var forceMagnitude = -0.25;
+                el.body.applyImpulse(direction.multiplyScalar(forceMagnitude), new CANNON.Vec3());
 
-             
+            });            
         }
-        
-
     },
 });
