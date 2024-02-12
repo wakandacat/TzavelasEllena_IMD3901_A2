@@ -43,7 +43,7 @@ AFRAME.registerComponent('selected-colour', {
         //when the snow pile is clicked, create a snowball and hold it
         el.addEventListener('click', function () {
             if(scene.getAttribute('hold-state').isHolding == false){
-
+                //create the snowball
                 var snowBall = document.createElement('a-entity');
                 snowBall.setAttribute('class', 'ball interactive');
                 snowBall.setAttribute('geometry', {primitive: 'sphere'},{radius: '0.1'});
@@ -51,14 +51,15 @@ AFRAME.registerComponent('selected-colour', {
                 snowBall.setAttribute('position', '0 0 -2');
                 snowBall.setAttribute('scale', '0.5 0.5 0.5'); 
                 snowBall.setAttribute('ball-manipulation', {isManipulating: true});  
-                cursor.appendChild(snowBall);
+                cursor.appendChild(snowBall); //append it to the cursor
 
+                //create the text that appears beside the snowball
                 var text = document.createElement('a-entity');
                 text.setAttribute('id', 'text2');
                 text.setAttribute('visible', true);
                 text.setAttribute('text', {value: 'CLICK TO THROW', color: 'rgb(86, 227, 199)', font: 'exo2bold', width: '1.5', anchor: 'left', baseline: 'top', wrapCount: '12'});   
-                text.setAttribute('position', '2 1 -3')
-                cursor.appendChild(text);
+                text.setAttribute('position', '0.5 0.5 -1')
+                cursor.appendChild(text); //append it to the cursor
 
                 //make sure the snow pile is not interactable while snowball is held
                 leftArea();

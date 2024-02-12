@@ -14,6 +14,7 @@ AFRAME.registerComponent('ball-manipulation', {
         //snowball collide with floor
         el.addEventListener('collide', function (e) {
 
+            //access the sliders
             var myColor = document.getElementById("ballColor").value
             var myScale = document.getElementById("ballScale").value / 10;
 
@@ -27,11 +28,11 @@ AFRAME.registerComponent('ball-manipulation', {
             scene.appendChild(splat); 
 
             //delete the snowball once it hits the ground
-            setTimeout(function() { //delete between frames?
+            setTimeout(function() { //execute asap
                 e.detail.body.el.parentNode.removeChild(document.querySelector('#text2'));
                 e.detail.body.el.parentNode.removeChild(e.detail.body.el);
                 sound.components.sound.playSound();
-            }, 0);    
+            }, 0);
             
           });
 
@@ -72,7 +73,6 @@ AFRAME.registerComponent('ball-manipulation', {
                 //add a force
                 var forceMagnitude = -0.25;
                 el.body.applyImpulse(direction.multiplyScalar(forceMagnitude), new CANNON.Vec3());
-
             });            
         }
     },
